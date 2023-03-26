@@ -1,0 +1,59 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.10'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+ext {
+	blazePersistenceVersion = "1.6.8"
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.h2database:h2'
+
+
+	// Blaze Persistence (required for Blaze Persistence: Entity Views)
+	implementation "com.blazebit:blaze-persistence-core-api:${blazePersistenceVersion}"
+	runtimeOnly "com.blazebit:blaze-persistence-core-impl:${blazePersistenceVersion}"
+	implementation "com.blazebit:blaze-persistence-integration-hibernate-5.6:${blazePersistenceVersion}"
+
+	// Blaze Persistence JPA Criteria (required for Blaze Persistence: Entity Views integration with Spring Data JPA)
+	implementation "com.blazebit:blaze-persistence-jpa-criteria-api:${blazePersistenceVersion}"
+	runtimeOnly "com.blazebit:blaze-persistence-jpa-criteria-impl:${blazePersistenceVersion}"
+
+	// Blaze persistence: Entity Views
+	implementation "com.blazebit:blaze-persistence-entity-view-api:${blazePersistenceVersion}"
+	runtimeOnly "com.blazebit:blaze-persistence-entity-view-impl:${blazePersistenceVersion}"
+	annotationProcessor "com.blazebit:blaze-persistence-entity-view-processor:${blazePersistenceVersion}"
+	implementation "com.blazebit:blaze-persistence-integration-entity-view-spring:${blazePersistenceVersion}"
+	implementation "com.blazebit:blaze-persistence-integration-spring-data-2.7:${blazePersistenceVersion}"
+
+	// Blaze peristence: Query DSL
+	implementation "com.blazebit:blaze-persistence-integration-querydsl-expressions:${blazePersistenceVersion}"
+
+
+	// Query DSL
+	implementation "com.querydsl:querydsl-jpa"
+	annotationProcessor "com.querydsl:querydsl-apt::jpa"
+	// see https://stackoverflow.com/a/52785316
+	// needed because the query dsl annotation processor doesn't recognize javax.persistence.Entity
+	// This puts the necessary dependencies on the classpath at annotation-processing time.
+	annotationProcessor 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// Lombok
+	compileOnly "org.projectlombok:lombok"
+	annotationProcessor "org.projectlombok:lombok"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
